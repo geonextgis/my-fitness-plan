@@ -1,0 +1,1033 @@
+<!--
+  HOW TO HOST ON GITHUB PAGES:
+  1. Create a new GitHub repo (e.g. "my-fitness-plan")
+  2. Upload index.html AND the data/ folder to the repo root
+  3. Go to Settings > Pages > Source: Deploy from branch > main / root
+  4. Wait 1-2 minutes. Live at: https://YOUR-USERNAME.github.io/my-fitness-plan/
+
+  EDITING YOUR PLAN:
+  - Diet meals : data/plan.js
+  - Grocery list: data/grocery.js
+  - Gym workouts: data/gym.js
+-->
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Fitness Plan</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('diet-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <style>
+    /* ─── Tokens: light ─────────────────────────────────────────── */
+    :root {
+      --accent:       #F97316;
+      --accent-dk:    #EA580C;
+      --accent-light: #FFF7ED;
+      --accent-glow:  rgba(249,115,22,0.28);
+
+      --text:         #1C1917;
+      --text-muted:   #78716C;
+      --bg:           #FAFAF9;
+      --surface:      #F0EFEE;
+      --card:         #FFFFFF;
+      --border:       rgba(0,0,0,0.07);
+
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:    0 6px 20px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+      --shadow-hover: 0 12px 32px rgba(0,0,0,0.12), 0 3px 10px rgba(0,0,0,0.06);
+
+      --radius:    14px;
+      --radius-sm:  9px;
+      --radius-xs:  6px;
+
+      /* diet meal colors */
+      --c-breakfast: #F97316;
+      --c-snack:     #D946EF;
+      --c-lunch:     #22C55E;
+      --c-dinner:    #3B82F6;
+
+      /* diet badges */
+      --badge-breakfast-bg:  #FFF7ED; --badge-breakfast-txt: #9A3412;
+      --badge-snack-bg:      #FDF2F8; --badge-snack-txt:     #86198F;
+      --badge-lunch-bg:      #F0FDF4; --badge-lunch-txt:     #166534;
+      --badge-dinner-bg:     #EFF6FF; --badge-dinner-txt:    #1E40AF;
+      --badge-cook-bg:       #ECFDF5; --badge-cook-txt:      #065F46;
+
+      /* gym badges */
+      --badge-push-bg:   #FFF7ED; --badge-push-txt:   #9A3412;
+      --badge-pull-bg:   #EFF6FF; --badge-pull-txt:   #1E40AF;
+      --badge-legs-bg:   #F0FDF4; --badge-legs-txt:   #166534;
+      --badge-upper-bg:  #FDF2F8; --badge-upper-txt:  #86198F;
+      --badge-full-bg:   #ECFDF5; --badge-full-txt:   #065F46;
+      --badge-cardio-bg: #FEFCE8; --badge-cardio-txt: #854D0E;
+      --badge-rest-bg:   #F5F5F4; --badge-rest-txt:   #57534E;
+
+      /* gym UI */
+      --warmup-bg:       #FFFBEB;
+      --warmup-txt:      #92400E;
+      --warmup-label:    #B45309;
+      --gym-tip-bg:      rgba(37,99,235,0.06);
+      --gym-tip-border:  #2563EB;
+    }
+
+    /* ─── Tokens: dark ──────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --accent:       #FB923C;
+      --accent-dk:    #F97316;
+      --accent-light: #1C1008;
+      --accent-glow:  rgba(251,146,60,0.22);
+
+      --text:         #F5F5F4;
+      --text-muted:   #A8A29E;
+      --bg:           #0C0A09;
+      --surface:      #1C1917;
+      --card:         #221E1B;
+      --border:       rgba(255,255,255,0.07);
+
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.5),  0 1px 2px rgba(0,0,0,0.4);
+      --shadow-md:    0 6px 20px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.45);
+      --shadow-hover: 0 12px 32px rgba(0,0,0,0.65), 0 3px 10px rgba(0,0,0,0.5);
+
+      --badge-breakfast-bg:  #3C1503; --badge-breakfast-txt: #FDBA74;
+      --badge-snack-bg:      #3B0764; --badge-snack-txt:     #E879F9;
+      --badge-lunch-bg:      #052E16; --badge-lunch-txt:     #86EFAC;
+      --badge-dinner-bg:     #172554; --badge-dinner-txt:    #93C5FD;
+      --badge-cook-bg:       #022C22; --badge-cook-txt:      #6EE7B7;
+
+      --badge-push-bg:   #3C1503; --badge-push-txt:   #FDBA74;
+      --badge-pull-bg:   #172554; --badge-pull-txt:   #93C5FD;
+      --badge-legs-bg:   #052E16; --badge-legs-txt:   #86EFAC;
+      --badge-upper-bg:  #3B0764; --badge-upper-txt:  #E879F9;
+      --badge-full-bg:   #022C22; --badge-full-txt:   #6EE7B7;
+      --badge-cardio-bg: #3F3009; --badge-cardio-txt: #FDE68A;
+      --badge-rest-bg:   #1C1917; --badge-rest-txt:   #A8A29E;
+
+      --warmup-bg:      #3F3009;
+      --warmup-txt:     #FDE68A;
+      --warmup-label:   #FCD34D;
+      --gym-tip-bg:     rgba(96,165,250,0.08);
+      --gym-tip-border: #60A5FA;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ─── Header ─────────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(140deg, var(--accent) 0%, var(--accent-dk) 100%);
+      color: #fff;
+      padding: 28px 24px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      max-width: 880px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .header-copy { flex: 1; }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    /* ─── Mode switcher ──────────────────────────────────────────── */
+    .mode-switcher {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .mode-btn {
+      padding: 7px 18px;
+      border-radius: 99px;
+      border: 1.5px solid rgba(255,255,255,0.45);
+      background: transparent;
+      color: rgba(255,255,255,0.8);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    }
+    .mode-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    .mode-btn.active {
+      background: rgba(255,255,255,0.95);
+      color: var(--accent-dk);
+      border-color: transparent;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .header-tagline {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+    .phase-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .phase-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(.75); }
+    }
+
+    .theme-btn {
+      flex-shrink: 0;
+      margin-top: 2px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 99px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.3); }
+
+    /* ─── Shared: stat/macro bar ─────────────────────────────────── */
+    .macro-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 880px;
+      margin: 22px auto 0;
+      padding: 0 20px;
+    }
+    .macro-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 16px 13px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .macro-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    /* diet bar stripes */
+    #dietMacroBar .macro-card:nth-child(1)::before { background: var(--accent); }
+    #dietMacroBar .macro-card:nth-child(2)::before { background: var(--c-dinner); }
+    #dietMacroBar .macro-card:nth-child(3)::before { background: var(--c-lunch); }
+    #dietMacroBar .macro-card:nth-child(4)::before { background: var(--c-snack); }
+    /* gym bar stripes */
+    #gymStatBar .macro-card:nth-child(1)::before { background: #2563EB; }
+    #gymStatBar .macro-card:nth-child(2)::before { background: #16A34A; }
+    #gymStatBar .macro-card:nth-child(3)::before { background: #D97706; }
+    #gymStatBar .macro-card:nth-child(4)::before { background: #7C3AED; }
+
+    .macro-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+    }
+    .macro-value {
+      font-size: 1.65rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-top: 3px;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+    #dietMacroBar .macro-card:nth-child(1) .macro-value { color: var(--accent); }
+    .macro-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ─── Nav tabs ───────────────────────────────────────────────── */
+    .nav-wrap {
+      max-width: 880px;
+      margin: 18px auto 0;
+      padding: 0 20px;
+    }
+    .tab-row {
+      display: flex;
+      gap: 3px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      transition: background 0.3s;
+    }
+    .tab-row::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .tab-btn:hover:not(.active) { background: rgba(249,115,22,0.09); color: var(--accent); }
+    .tab-btn.active { background: var(--accent); color: #fff; box-shadow: 0 2px 10px var(--accent-glow); }
+    .tab-btn.is-today::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.6;
+    }
+
+    /* ─── Main areas ─────────────────────────────────────────────── */
+    .content-main {
+      max-width: 880px;
+      margin: 20px auto 52px;
+      padding: 0 20px;
+      transition: opacity 0.12s ease;
+    }
+    .section-eyebrow {
+      font-size: 0.67rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    /* ─── Shared badge ───────────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 3px 11px;
+      border-radius: 99px;
+      font-size: 0.67rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      flex-shrink: 0;
+    }
+    .badge-breakfast { background: var(--badge-breakfast-bg); color: var(--badge-breakfast-txt); }
+    .badge-snack     { background: var(--badge-snack-bg);     color: var(--badge-snack-txt); }
+    .badge-lunch     { background: var(--badge-lunch-bg);     color: var(--badge-lunch-txt); }
+    .badge-dinner    { background: var(--badge-dinner-bg);    color: var(--badge-dinner-txt); }
+    .badge-push      { background: var(--badge-push-bg);      color: var(--badge-push-txt); }
+    .badge-pull      { background: var(--badge-pull-bg);      color: var(--badge-pull-txt); }
+    .badge-legs      { background: var(--badge-legs-bg);      color: var(--badge-legs-txt); }
+    .badge-upper     { background: var(--badge-upper-bg);     color: var(--badge-upper-txt); }
+    .badge-full      { background: var(--badge-full-bg);      color: var(--badge-full-txt); }
+    .badge-cardio    { background: var(--badge-cardio-bg);    color: var(--badge-cardio-txt); }
+    .badge-rest      { background: var(--badge-rest-bg);      color: var(--badge-rest-txt); }
+
+    /* ─── DIET: meal cards ───────────────────────────────────────── */
+    .meals-grid { display: grid; gap: 12px; }
+    .meal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.2s, transform 0.2s;
+    }
+    .meal-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .meal-card[data-type="breakfast"] { border-left-color: var(--c-breakfast); }
+    .meal-card[data-type="snack"]     { border-left-color: var(--c-snack); }
+    .meal-card[data-type="lunch"]     { border-left-color: var(--c-lunch); }
+    .meal-card[data-type="dinner"]    { border-left-color: var(--c-dinner); }
+
+    .meal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .meal-name { font-weight: 700; font-size: 0.97rem; flex: 1; }
+    .meal-kcal {
+      font-size: 0.77rem; font-weight: 800; color: var(--text-muted);
+      background: var(--surface); padding: 4px 11px; border-radius: 99px; flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .meal-items { font-size: 0.855rem; color: var(--text-muted); line-height: 1.8; }
+    .cook-double-box {
+      margin-top: 12px;
+      background: var(--badge-cook-bg); color: var(--badge-cook-txt);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 0.83rem;
+    }
+    .cook-label {
+      font-size: 0.63rem; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.09em; white-space: nowrap; padding-top: 2px; opacity: 0.7;
+    }
+
+    /* ─── DIET: grocery ──────────────────────────────────────────── */
+    .copy-btn {
+      display: block; width: 100%; padding: 13px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius);
+      font-family: inherit; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.02em;
+      cursor: pointer; margin-bottom: 16px;
+      box-shadow: 0 4px 18px var(--accent-glow);
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .copy-btn:hover  { opacity: .9;  transform: translateY(-1px); }
+    .copy-btn:active { opacity: .78; transform: translateY(0); }
+    .grocery-grid { display: grid; gap: 12px; }
+    .grocery-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 15px 18px; box-shadow: var(--shadow-sm);
+      transition: background 0.3s;
+    }
+    .grocery-card h3 {
+      font-size: 0.67rem; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--accent); margin-bottom: 11px;
+    }
+    .grocery-card ul { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; }
+    .grocery-card ul li {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 99px;
+      padding: 5px 12px; font-size: 0.82rem; transition: background 0.15s;
+      cursor: default;
+    }
+    .grocery-card ul li:hover { background: var(--accent-light); }
+
+    /* ─── DIET: prep guide ───────────────────────────────────────── */
+    .prep-grid { display: grid; gap: 12px; }
+    .prep-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm);
+      transition: background 0.3s;
+    }
+    .prep-card.accent { background: var(--accent-light); border-color: rgba(249,115,22,0.18); }
+    .prep-card h3 { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .prep-card.accent h3 { color: var(--accent); }
+    .prep-card p, .prep-card li { font-size: 0.87rem; color: var(--text-muted); line-height: 1.78; }
+    .prep-card ul { padding-left: 18px; display: grid; gap: 4px; }
+
+    /* ─── GYM: stat bar value sizing ────────────────────────────── */
+    .macro-value-md { font-size: 1.2rem !important; }
+
+    /* ─── GYM: overview ──────────────────────────────────────────── */
+    .gym-info-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+      transition: background 0.3s;
+    }
+    .gym-info-item .gi-label {
+      font-size: 0.63rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.09em; color: var(--text-muted);
+    }
+    .gym-info-item .gi-value { font-size: 0.88rem; font-weight: 600; color: var(--text); margin-top: 2px; }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px; margin-bottom: 24px;
+    }
+    .split-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 13px 10px; box-shadow: var(--shadow-sm); text-align: center;
+      cursor: pointer; transition: box-shadow 0.2s, transform 0.2s, background 0.3s;
+    }
+    .split-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .split-day-name {
+      font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .split-focus { margin-bottom: 6px; }
+    .split-detail { font-size: 0.7rem; color: var(--text-muted); line-height: 1.45; }
+    .trainer-tag {
+      margin-top: 7px; font-size: 0.62rem; font-weight: 800;
+      color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    .milestones-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+    }
+    .milestone-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 13px 12px; box-shadow: var(--shadow-sm);
+      text-align: center; transition: background 0.3s;
+    }
+    .milestone-exercise { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .milestone-target   { font-size: 0.78rem; font-weight: 900; color: var(--accent); }
+
+    /* ─── GYM: day workout ───────────────────────────────────────── */
+    .gym-day-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .gym-muscles { font-size: 0.82rem; color: var(--text-muted); flex: 1; }
+    .gym-duration {
+      font-size: 0.77rem; font-weight: 800; background: var(--surface);
+      padding: 4px 12px; border-radius: 99px; color: var(--text-muted); flex-shrink: 0;
+      transition: background 0.3s;
+    }
+
+    .gym-phase-box {
+      border-radius: var(--radius); padding: 14px 18px; border: 1px solid transparent;
+      font-size: 0.86rem; line-height: 1.7;
+    }
+    .gym-phase-label {
+      font-size: 0.63rem; font-weight: 900; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 5px;
+    }
+    .warmup-box {
+      background: var(--warmup-bg); color: var(--warmup-txt);
+      border-color: rgba(217,119,6,0.2); margin-bottom: 14px;
+    }
+    .warmup-box .gym-phase-label { color: var(--warmup-label); }
+    .cooldown-box {
+      background: var(--badge-cook-bg); color: var(--badge-cook-txt);
+      border-color: rgba(6,95,70,0.15); margin-top: 14px;
+    }
+    .cooldown-box .gym-phase-label { opacity: 0.7; }
+
+    .exercises-grid { display: grid; gap: 12px; }
+    .exercise-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 3px solid #2563EB;
+      border-radius: var(--radius); padding: 17px 20px; box-shadow: var(--shadow-sm);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.2s, transform 0.2s;
+    }
+    [data-theme="dark"] .exercise-card { border-left-color: #60A5FA; }
+    .exercise-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+    .exercise-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .exercise-name { font-weight: 700; font-size: 0.97rem; flex: 1; }
+    .exercise-sets {
+      display: inline-block; background: var(--badge-dinner-bg); color: var(--badge-dinner-txt);
+      padding: 3px 11px; border-radius: 99px; font-size: 0.67rem; font-weight: 900;
+      letter-spacing: 0.06em; flex-shrink: 0;
+    }
+    .exercise-desc { font-size: 0.86rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 10px; }
+    .exercise-tip {
+      padding: 8px 12px;
+      background: var(--gym-tip-bg);
+      border-left: 3px solid var(--gym-tip-border);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+      font-size: 0.82rem; color: var(--text-muted); font-style: italic;
+    }
+
+    /* ─── GYM: rest day ──────────────────────────────────────────── */
+    .rest-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 48px 32px; text-align: center;
+      box-shadow: var(--shadow-sm); transition: background 0.3s;
+    }
+    .rest-card h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 14px; color: var(--text); }
+    .rest-card p  { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; max-width: 480px; margin: 0 auto; }
+
+    /* ─── GYM: 4-week plan ───────────────────────────────────────── */
+    .progression-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .week-badge {
+      display: inline-block; background: var(--badge-dinner-bg); color: var(--badge-dinner-txt);
+      padding: 3px 11px; border-radius: 99px; font-size: 0.67rem; font-weight: 900;
+      letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      header { padding: 22px 16px 18px; }
+      header h1 { font-size: 1.5rem; }
+      .macro-bar   { grid-template-columns: repeat(2,1fr); padding: 0 16px; }
+      .nav-wrap    { padding: 0 16px; }
+      .content-main { padding: 0 16px; }
+      .tab-btn     { font-size: 0.78rem; padding: 7px 10px; }
+      .split-grid  { grid-template-columns: repeat(2,1fr); }
+      .milestones-grid { grid-template-columns: repeat(2,1fr); }
+      .progression-grid { grid-template-columns: 1fr; }
+      .gym-info-box { grid-template-columns: 1fr; }
+      .meal-header { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ══════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-copy">
+      <h1>My Fitness Plan</h1>
+      <div class="mode-switcher">
+        <button class="mode-btn active" id="dietModeBtn">Diet</button>
+        <button class="mode-btn"        id="gymModeBtn">Gym</button>
+      </div>
+      <p class="header-tagline" id="headerTagline">
+        1,850 kcal/day &middot; 155g protein &middot; Cook-once system &middot; Indian-friendly
+      </p>
+      <span class="phase-pill">
+        <span class="phase-dot"></span>
+        <span id="phaseText">Week 1 — Fat loss phase</span>
+      </span>
+    </div>
+    <button class="theme-btn" id="themeBtn">Dark</button>
+  </div>
+</header>
+
+<!-- ═══════════════════ DIET SECTION ════════════════════════════ -->
+<section id="diet-section">
+
+  <div class="macro-bar" id="dietMacroBar">
+    <div class="macro-card">
+      <div class="macro-label">Calories</div>
+      <div class="macro-value" id="mKcal">1,845</div>
+      <div class="macro-sub">kcal / day</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Protein</div>
+      <div class="macro-value" id="mProtein">152g</div>
+      <div class="macro-sub">~42% &middot; 2.1 g/kg</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Carbs</div>
+      <div class="macro-value" id="mCarbs">177g</div>
+      <div class="macro-sub">~38% of calories</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Fats</div>
+      <div class="macro-value" id="mFats">54g</div>
+      <div class="macro-sub">~27% of calories</div>
+    </div>
+  </div>
+
+  <div class="nav-wrap">
+    <div class="tab-row" id="dietTabRow">
+      <button class="tab-btn active" data-tab="mon">Mon</button>
+      <button class="tab-btn" data-tab="tue">Tue</button>
+      <button class="tab-btn" data-tab="wed">Wed</button>
+      <button class="tab-btn" data-tab="thu">Thu</button>
+      <button class="tab-btn" data-tab="fri">Fri</button>
+      <button class="tab-btn" data-tab="sat">Sat</button>
+      <button class="tab-btn" data-tab="sun">Sun</button>
+      <button class="tab-btn" data-tab="grocery">Grocery</button>
+      <button class="tab-btn" data-tab="prep">Prep</button>
+    </div>
+  </div>
+
+  <main class="content-main" id="dietMain"></main>
+
+</section>
+
+<!-- ═══════════════════ GYM SECTION ═════════════════════════════ -->
+<section id="gym-section" hidden>
+
+  <div class="macro-bar" id="gymStatBar">
+    <div class="macro-card">
+      <div class="macro-label">Session</div>
+      <div class="macro-value">45–55</div>
+      <div class="macro-sub">minutes</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Days / week</div>
+      <div class="macro-value">6</div>
+      <div class="macro-sub">active days</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Rest day</div>
+      <div class="macro-value">Sun</div>
+      <div class="macro-sub">complete rest</div>
+    </div>
+    <div class="macro-card">
+      <div class="macro-label">Level</div>
+      <div class="macro-value macro-value-md">Beginner</div>
+      <div class="macro-sub">progressive overload</div>
+    </div>
+  </div>
+
+  <div class="nav-wrap">
+    <div class="tab-row" id="gymTabRow">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="mon">Mon</button>
+      <button class="tab-btn" data-tab="tue">Tue</button>
+      <button class="tab-btn" data-tab="wed">Wed</button>
+      <button class="tab-btn" data-tab="thu">Thu</button>
+      <button class="tab-btn" data-tab="fri">Fri</button>
+      <button class="tab-btn" data-tab="sat">Sat</button>
+      <button class="tab-btn" data-tab="sun">Sun</button>
+      <button class="tab-btn" data-tab="progression">4-Week Plan</button>
+      <button class="tab-btn" data-tab="tips">Gym Tips</button>
+    </div>
+  </div>
+
+  <main class="content-main" id="gymMain"></main>
+
+</section>
+
+<!-- ═══════════════════ DATA FILES ══════════════════════════════ -->
+<script src="data/plan.js"></script>
+<script src="data/grocery.js"></script>
+<script src="data/gym.js"></script>
+
+<!-- ═══════════════════ APP ══════════════════════════════════════ -->
+<script>
+/* ── Constants ───────────────────────────────────────────────── */
+const DAY_KEYS   = ['mon','tue','wed','thu','fri','sat','sun'];
+const DAY_LABELS = { mon:'Monday', tue:'Tuesday', wed:'Wednesday', thu:'Thursday', fri:'Friday', sat:'Saturday', sun:'Sunday' };
+const JS_DAY_MAP = [6,0,1,2,3,4,5]; // getDay() 0=Sun
+
+/* ── State ───────────────────────────────────────────────────── */
+let activeMode    = 'diet';
+let activeDietTab = 'mon';
+let activeGymTab  = 'overview';
+let gymInitialized = false;
+
+/* ── Accent color table ──────────────────────────────────────── */
+const ACCENTS = {
+  light: {
+    diet: { a:'#F97316', dk:'#EA580C', light:'#FFF7ED', glow:'rgba(249,115,22,0.28)' },
+    gym:  { a:'#2563EB', dk:'#1D4ED8', light:'#EFF6FF', glow:'rgba(37,99,235,0.28)' }
+  },
+  dark: {
+    diet: { a:'#FB923C', dk:'#F97316', light:'#1C1008', glow:'rgba(251,146,60,0.22)' },
+    gym:  { a:'#60A5FA', dk:'#3B82F6', light:'#172554', glow:'rgba(96,165,250,0.22)' }
+  }
+};
+
+function updateAccentVars() {
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+  const c = ACCENTS[theme][activeMode];
+  const s = document.documentElement.style;
+  s.setProperty('--accent',       c.a);
+  s.setProperty('--accent-dk',    c.dk);
+  s.setProperty('--accent-light', c.light);
+  s.setProperty('--accent-glow',  c.glow);
+}
+
+/* ── Theme ───────────────────────────────────────────────────── */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? 'Light' : 'Dark';
+  localStorage.setItem('diet-theme', t);
+  updateAccentVars();
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* ── Mode ────────────────────────────────────────────────────── */
+const TAGLINES = {
+  diet: '1,850 kcal/day · 155g protein · Cook-once system · Indian-friendly',
+  gym:  'TheosGym Müncheberg · Beginner split · 6 days/week'
+};
+const PHASES = {
+  diet: 'Week 1 — Fat loss phase',
+  gym:  'TheosGym · 24/7 access · Trainer: Mon & Wed 14:30'
+};
+
+function switchMode(mode) {
+  activeMode = mode;
+  localStorage.setItem('activeMode', mode);
+  document.getElementById('diet-section').hidden = (mode !== 'diet');
+  document.getElementById('gym-section').hidden  = (mode !== 'gym');
+  document.getElementById('dietModeBtn').classList.toggle('active', mode === 'diet');
+  document.getElementById('gymModeBtn').classList.toggle('active', mode === 'gym');
+  document.getElementById('headerTagline').textContent = TAGLINES[mode];
+  document.getElementById('phaseText').textContent     = PHASES[mode];
+  updateAccentVars();
+  if (mode === 'gym' && !gymInitialized) {
+    showGymTab('overview');
+    gymInitialized = true;
+  }
+}
+document.getElementById('dietModeBtn').addEventListener('click', () => switchMode('diet'));
+document.getElementById('gymModeBtn').addEventListener('click',  () => switchMode('gym'));
+
+/* ── Diet: render ────────────────────────────────────────────── */
+function renderDietDay(key) {
+  const day = dietPlan[key];
+  let h = `<p class="section-eyebrow">${DAY_LABELS[key]}</p><div class="meals-grid">`;
+  for (const m of day.meals) {
+    h += `<div class="meal-card" data-type="${m.type}">
+      <div class="meal-header">
+        <span class="badge badge-${m.type}">${m.type}</span>
+        <span class="meal-name">${m.name}</span>
+        <span class="meal-kcal">${m.kcal} kcal</span>
+      </div>
+      <div class="meal-items">${m.items}</div>
+      ${m.cookDouble ? `<div class="cook-double-box">
+        <span class="cook-label">Cook&nbsp;double</span>
+        <span>${m.cookDouble}</span>
+      </div>` : ''}
+    </div>`;
+  }
+  return h + '</div>';
+}
+
+function renderGrocery() {
+  const lines = ['My Weekly Grocery List\n'];
+  let h = `<button class="copy-btn" id="copyBtn">Copy full grocery list to clipboard</button><div class="grocery-grid">`;
+  for (const [cat, items] of Object.entries(grocery)) {
+    lines.push(`${cat}:\n` + items.map(i => `  - ${i}`).join('\n'));
+    h += `<div class="grocery-card"><h3>${cat}</h3><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+  }
+  return { html: h + '</div>', text: lines.join('\n') };
+}
+
+function renderPrep() {
+  return `<p class="section-eyebrow">Prep Guide</p><div class="prep-grid">
+    <div class="prep-card accent"><h3>The Cook-Once Rule</h3>
+      <p>Every dinner is cooked in double portion. Half goes straight into the fridge and becomes the next day's lunch — zero extra effort. One cooking session per day, every day.</p>
+    </div>
+    <div class="prep-card"><h3>Sunday 30-Minute Prep</h3><ul>
+      <li>Hard-boil 10–12 eggs — store in shell for Mon/Wed/Fri snacks</li>
+      <li>Roast a full batch of makhana with salt and pepper</li>
+      <li>Pre-measure oat jars for Mon and Wed overnight oats</li>
+      <li>Thaw frozen mango in fridge overnight</li>
+      <li>Dice onions, tomatoes, cucumber — airtight boxes in fridge</li>
+    </ul></div>
+    <div class="prep-card"><h3>Every-Night 5-Minute Rule</h3><ul>
+      <li>Pack tomorrow's lunch box directly from tonight's pot while still warm</li>
+      <li>Set out tomorrow's breakfast ingredients on the counter</li>
+      <li>On overnight-oats nights, layer the jar and refrigerate</li>
+    </ul></div>
+    <div class="prep-card"><h3>Hydration</h3><ul>
+      <li>Target 2.5–3 L of water every day</li>
+      <li>Morning: boil 1 tsp cumin in 500 ml water, cool, drink (jeera water)</li>
+      <li>Drink 400–500 ml water 20 min before each main meal</li>
+    </ul></div>
+    <div class="prep-card"><h3>Optional Supplements</h3><ul>
+      <li><strong>Whey protein</strong> — 25 g scoop if 155 g protein feels hard</li>
+      <li><strong>Creatine monohydrate</strong> — 3–5 g/day, any time</li>
+      <li><strong>Vitamin D3</strong> — 1,500 IU/day (essential in Germany)</li>
+    </ul></div>
+  </div>`;
+}
+
+function updateDietMacros(key) {
+  const d = dietPlan[key];
+  if (!d) return;
+  document.getElementById('mKcal').textContent    = d.kcal.toLocaleString();
+  document.getElementById('mProtein').textContent = d.protein + 'g';
+  document.getElementById('mCarbs').textContent   = d.carbs + 'g';
+  document.getElementById('mFats').textContent    = d.fats + 'g';
+}
+
+function showDietTab(key) {
+  activeDietTab = key;
+  document.querySelectorAll('#dietTabRow .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
+  const el = document.getElementById('dietMain');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    if (key === 'grocery') {
+      const { html, text } = renderGrocery();
+      el.innerHTML = html;
+      document.getElementById('copyBtn').addEventListener('click', function () {
+        const cb = () => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy full grocery list to clipboard'; }, 2200); };
+        navigator.clipboard ? navigator.clipboard.writeText(text).then(cb).catch(fallback) : fallback();
+        function fallback() {
+          const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
+          document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb();
+        }
+      });
+    } else if (key === 'prep') {
+      el.innerHTML = renderPrep();
+    } else {
+      el.innerHTML = renderDietDay(key);
+      updateDietMacros(key);
+    }
+    el.style.opacity = '1';
+  }, 100);
+}
+
+document.getElementById('dietTabRow').addEventListener('click', e => {
+  const b = e.target.closest('.tab-btn');
+  if (b && b.dataset.tab !== activeDietTab) showDietTab(b.dataset.tab);
+});
+
+/* ── Gym: helpers ────────────────────────────────────────────── */
+function focusBadge(focus) {
+  if (!focus) return 'badge-rest';
+  const f = focus.toLowerCase();
+  if (f.includes('push'))   return 'badge-push';
+  if (f.includes('pull'))   return 'badge-pull';
+  if (f.includes('leg'))    return 'badge-legs';
+  if (f.includes('upper'))  return 'badge-upper';
+  if (f.includes('full'))   return 'badge-full';
+  if (f.includes('cardio')) return 'badge-cardio';
+  return 'badge-rest';
+}
+
+/* ── Gym: render ─────────────────────────────────────────────── */
+function renderGymOverview() {
+  const ov = gymPlan.overview;
+  let h = '<p class="section-eyebrow">Gym Info</p>';
+  h += `<div class="gym-info-box">
+    <div class="gym-info-item"><div class="gi-label">Gym</div><div class="gi-value">${ov.gym}</div></div>
+    <div class="gym-info-item"><div class="gi-label">Address</div><div class="gi-value">${ov.address}</div></div>
+    <div class="gym-info-item"><div class="gi-label">Access</div><div class="gi-value">${ov.access}</div></div>
+    <div class="gym-info-item"><div class="gi-label">Trainer available</div><div class="gi-value">${ov.trainerDays}</div></div>
+  </div>`;
+
+  h += '<p class="section-eyebrow">Weekly Split — click a day to open its workout</p><div class="split-grid">';
+  for (const e of ov.split) {
+    const isTrainer = ov.trainerDayKeys.includes(e.dayKey);
+    h += `<div class="split-card" onclick="showGymTab('${e.dayKey}')">
+      <div class="split-day-name">${e.day}</div>
+      <div class="split-focus"><span class="badge ${focusBadge(e.focus)}">${e.focus}</span></div>
+      <div class="split-detail">${e.detail}</div>
+      ${isTrainer ? '<div class="trainer-tag">Trainer day</div>' : ''}
+    </div>`;
+  }
+  h += '</div>';
+
+  h += '<p class="section-eyebrow">4-Week Milestones</p><div class="milestones-grid">';
+  for (const m of gymPlan.milestones) {
+    h += `<div class="milestone-card">
+      <div class="milestone-exercise">${m.exercise}</div>
+      <div class="milestone-target">${m.target}</div>
+    </div>`;
+  }
+  h += '</div>';
+  return h;
+}
+
+function renderGymDay(key) {
+  const day = gymPlan[key];
+  if (!day) return '';
+  if (key === 'sun') {
+    return `<p class="section-eyebrow">Sunday &mdash; Rest Day</p>
+      <div class="rest-card"><h2>Rest &amp; Recover</h2><p>${day.note}</p></div>`;
+  }
+  let h = `<div class="gym-day-header">
+    <span class="badge ${focusBadge(day.focus)}">${day.focus}</span>
+    <span class="gym-muscles">${day.muscles}</span>
+    <span class="gym-duration">${day.duration}</span>
+  </div>`;
+
+  h += `<div class="gym-phase-box warmup-box">
+    <div class="gym-phase-label">Warm-up</div>
+    ${day.warmup}
+  </div>`;
+
+  h += '<div class="exercises-grid">';
+  for (const ex of day.exercises) {
+    h += `<div class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-name">${ex.name}</span>
+        <span class="exercise-sets">${ex.sets}</span>
+      </div>
+      <p class="exercise-desc">${ex.desc}</p>
+      <div class="exercise-tip">${ex.tip}</div>
+    </div>`;
+  }
+  h += '</div>';
+
+  h += `<div class="gym-phase-box cooldown-box">
+    <div class="gym-phase-label">Cool-down</div>
+    ${day.cooldown}
+  </div>`;
+  return h;
+}
+
+function renderGymProgression() {
+  let h = '<p class="section-eyebrow">4-Week Progression Plan</p><div class="progression-grid">';
+  for (const p of gymPlan.progressionPlan) {
+    h += `<div class="prep-card">
+      <div class="week-badge">${p.week}</div>
+      <h3>${p.focus}</h3>
+      <p>${p.desc}</p>
+    </div>`;
+  }
+  return h + '</div>';
+}
+
+function renderGymTips() {
+  let h = '<p class="section-eyebrow">Gym Tips</p><div class="prep-grid">';
+  for (const t of gymPlan.gymTips) {
+    h += `<div class="prep-card"><h3>${t.title}</h3><p>${t.desc}</p></div>`;
+  }
+  return h + '</div>';
+}
+
+function showGymTab(key) {
+  activeGymTab = key;
+  document.querySelectorAll('#gymTabRow .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
+  const el = document.getElementById('gymMain');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    if      (key === 'overview')    el.innerHTML = renderGymOverview();
+    else if (key === 'progression') el.innerHTML = renderGymProgression();
+    else if (key === 'tips')        el.innerHTML = renderGymTips();
+    else                            el.innerHTML = renderGymDay(key);
+    el.style.opacity = '1';
+  }, 100);
+}
+
+document.getElementById('gymTabRow').addEventListener('click', e => {
+  const b = e.target.closest('.tab-btn');
+  if (b && b.dataset.tab !== activeGymTab) showGymTab(b.dataset.tab);
+});
+
+/* ── Boot ────────────────────────────────────────────────────── */
+const todayKey = DAY_KEYS[JS_DAY_MAP[new Date().getDay()]];
+document.querySelectorAll('#dietTabRow .tab-btn, #gymTabRow .tab-btn').forEach(b => {
+  if (b.dataset.tab === todayKey) b.classList.add('is-today');
+});
+
+applyTheme(localStorage.getItem('diet-theme') || 'light');
+showDietTab('mon');
+switchMode(localStorage.getItem('activeMode') || 'diet');
+</script>
+</body>
+</html>

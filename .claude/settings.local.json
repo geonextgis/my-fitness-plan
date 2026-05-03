@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item -ItemType Directory -Force -Path \"D:\\\\GITHUB\\\\PROJECT\\\\diet-plan\\\\data\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Output \"dir created\")"
+    ]
+  }
+}
