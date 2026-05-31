@@ -15,7 +15,7 @@ Both modes live in the same file. Switching modes replaces the entire content ar
 ## Site identity
 
 - **Title:** My Fitness Plan
-- **Tagline (diet mode):** 1,850 kcal · Cook once, eat twice · Indian-friendly
+- **Tagline (diet mode):** 1,850 kcal · Cook once, eat twice · Fat loss + muscle · Indian-friendly
 - **Tagline (gym mode):** TheosGym Müncheberg · Beginner split · 6 days/week
 - **Color scheme:**
   - Diet mode accent: saffron orange `#F97316`
@@ -91,20 +91,20 @@ const dietPlan = {
         items: '2 hard-boiled eggs · chaat masala · black salt' },
       { type: 'lunch', name: 'Dal & rice (Sunday leftover)', kcal: 500,
         items: 'Leftover moong dal + jeera rice from Sunday dinner. Reheat and eat.' },
-      { type: 'dinner', name: 'Chicken curry with brown rice', kcal: 700,
-        items: '300g chicken breast · 80g brown rice · 1 onion · crushed tomatoes · yogurt · garlic-ginger paste · 1 tsp oil · cumin, coriander, turmeric, garam masala',
-        cookDouble: 'Refrigerate half the curry + rice = Tuesday lunch.' }
+      { type: 'dinner', name: 'Egg bhurji with quinoa & salad', kcal: 700,
+        items: '5 eggs · 1 onion · 2 tomatoes · green chilli · 1 tsp oil · cumin, turmeric, coriander · 80g quinoa · cucumber + tomato salad',
+        cookDouble: 'Extra bhurji + quinoa packed = Tuesday lunch.' }
     ]
   },
   tue: {
     kcal: 1850, protein: 155, carbs: 174, fats: 55,
     meals: [
-      { type: 'breakfast', name: 'Skyr with fruit & chia', kcal: 350,
-        items: '200g plain Skyr · 100g mixed berries · 1 tbsp chia seeds · 1 tsp honey · cardamom' },
+      { type: 'breakfast', name: 'Greek yogurt & berry bowl', kcal: 350,
+        items: '200g Greek yogurt · 100g mixed berries · 50g rolled oats · 10g pumpkin seeds · 1 tsp honey · cardamom' },
       { type: 'snack', name: 'Mixed nuts & apple', kcal: 150,
         items: '20g mixed nuts (almonds + walnuts) · 1 medium apple' },
-      { type: 'lunch', name: 'Chicken curry & brown rice (Monday leftover)', kcal: 500,
-        items: 'Leftover from Monday dinner. Reheat.' },
+      { type: 'lunch', name: 'Egg bhurji & quinoa (Monday leftover)', kcal: 500,
+        items: 'Leftover from Monday dinner. Reheat bhurji, add fresh coriander and lemon squeeze.' },
       { type: 'dinner', name: 'Masoor dal with jeera rice & raita', kcal: 700,
         items: '150g red lentils · 80g basmati rice · 1 onion · 1 tomato · 1 tsp ghee · cumin, turmeric, hing · raita: 150g yogurt + cucumber + jeera',
         cookDouble: 'Double dal + rice. Half in fridge = Wednesday lunch.' }
@@ -129,8 +129,8 @@ const dietPlan = {
     meals: [
       { type: 'breakfast', name: 'Greek yogurt mango bowl', kcal: 350,
         items: '200g Greek yogurt · 50g oats · 100g mango (fresh or frozen) · 10g pumpkin seeds · cardamom' },
-      { type: 'snack', name: 'Roasted makhana', kcal: 150,
-        items: '30g roasted makhana (fox nuts) — available at Indian grocery store' },
+      { type: 'snack', name: 'Sprouts salad', kcal: 150,
+        items: '80g mixed sprouts (moong/chickpea) · 1 small tomato · cucumber · lemon juice · chaat masala · fresh coriander' },
       { type: 'lunch', name: 'Egg bhurji roti wrap (Wednesday leftover)', kcal: 500,
         items: 'Leftover egg bhurji in the extra roti. Add fresh onion + coriander.' },
       { type: 'dinner', name: 'Chana masala with brown rice', kcal: 705,
@@ -161,20 +161,20 @@ const dietPlan = {
         items: '150g Magerquark · 1 orange (segmented) · 1 tsp honey' },
       { type: 'lunch', name: 'Salmon tikka & quinoa bowl (Friday leftover)', kcal: 500,
         items: 'Leftover salmon tikka + quinoa. Add fresh lettuce and lemon.' },
-      { type: 'dinner', name: 'Palak paneer (light) with roti', kcal: 690,
-        items: '200g low-fat paneer · 300g spinach · 1 onion · garlic-ginger paste · 1 tsp oil · 1 tsp ghee · garam masala, cumin · 2 whole wheat rotis per person',
-        cookDouble: 'Double palak paneer + 1 extra roti = Sunday lunch.' }
+      { type: 'dinner', name: 'Chicken curry with brown rice', kcal: 690,
+        items: '300g chicken breast · 80g brown rice · 1 onion · crushed tomatoes · yogurt · garlic-ginger paste · 1 tsp oil · cumin, coriander, turmeric, garam masala',
+        cookDouble: 'Refrigerate half the curry + rice = Sunday lunch.' }
     ]
   },
   sun: {
     kcal: 1855, protein: 154, carbs: 176, fats: 55,
     meals: [
-      { type: 'breakfast', name: 'Bircher oats with mango', kcal: 370,
-        items: '70g oats · 200ml skimmed milk · 100g Skyr · 1 grated apple · 100g mango · cardamom — prepped Saturday night' },
-      { type: 'snack', name: 'Makhana + boiled egg', kcal: 145,
-        items: '20g roasted makhana · 1 boiled egg' },
-      { type: 'lunch', name: 'Palak paneer & roti (Saturday leftover)', kcal: 500,
-        items: 'Leftover from Saturday. Reheat. Add fresh onion salad.' },
+      { type: 'breakfast', name: 'Masala oat bowl with banana', kcal: 370,
+        items: '70g rolled oats · 200ml skimmed milk · 100g Magerquark · 1 banana · 1 tsp almond butter · cardamom & cinnamon — prepped Saturday night' },
+      { type: 'snack', name: 'Boiled eggs & apple', kcal: 145,
+        items: '2 hard-boiled eggs · 1 medium apple · black salt & chaat masala' },
+      { type: 'lunch', name: 'Chicken curry & brown rice (Saturday leftover)', kcal: 500,
+        items: 'Leftover chicken curry + rice from Saturday. Reheat. Add fresh coriander and lemon.' },
       { type: 'dinner', name: 'Moong dal with jeera rice', kcal: 690,
         items: '150g split moong dal · 80g basmati rice · 1 onion · 2 tomatoes · 1 tsp ghee · cumin seeds, turmeric, hing, garam masala · fresh coriander',
         cookDouble: 'Double dal + rice = Monday lunch. Week restarts cleanly.' }
@@ -184,21 +184,32 @@ const dietPlan = {
 ```
 
 ### Grocery list tab (diet mode)
-Static list organized by category with a "Copy list" button that copies all items to clipboard:
-- Proteins: chicken breast 700g, salmon fillet 600g, paneer low-fat 400g, eggs 20 pcs, chickpeas canned 3 cans, red lentils 400g, moong dal 300g
-- Dairy: Greek yogurt 1kg, Skyr 500g, Magerquark 500g, skimmed milk 1.5L, ghee small jar
+Split into **two market trips per week**. Each trip has a "Copy list" clipboard button.
+
+**Trip 1 — Monday (start of week)**
+- Proteins: chicken breast 600g, eggs 20 pcs, chickpeas canned 3 cans, red lentils 400g, moong dal 300g
+- Dairy: Greek yogurt 1kg, Magerquark 500g, skimmed milk 1.5L, ghee small jar
 - Grains: rolled oats 800g, brown rice 500g, basmati rice 500g, quinoa 300g, whole wheat roti 1 pack, Vollkornbrot 1 loaf
-- Vegetables: spinach 600g, onions 8 pcs, tomatoes 8 pcs, cucumber 3 pcs, green chillies 1 pack, fresh coriander 1 bunch
-- Fruits: bananas 5, apples 3, oranges 3, mixed berries 400g, mango fresh or frozen 400g
-- Indian pantry: garlic-ginger paste, canned crushed tomatoes 3 cans, garam masala, cumin, turmeric, coriander powder, chaat masala, amchur, tandoori masala, chana masala powder, hing, black salt, makhana 100g, cardamom, cinnamon, rapeseed oil 500ml
-- Nuts & seeds: almonds 100g, walnuts 100g, chia seeds 50g, pumpkin seeds 100g, almond butter 1 jar, honey small jar
+- Vegetables: spinach 300g, onions 5 pcs, tomatoes 5 pcs, cucumber 2 pcs, green chillies 1 pack, fresh coriander 1 bunch
+- Fruits: bananas 5, apples 3, mixed berries 200g
+- Pantry top-up: garlic-ginger paste, canned crushed tomatoes 2 cans, rapeseed oil 500ml
+
+**Trip 2 — Thursday (mid-week)**
+- Proteins: salmon fillet 600g, eggs 6 pcs (top-up), chickpeas canned 1 can (if needed)
+- Dairy: Greek yogurt 500g (top-up), skimmed milk 1L
+- Vegetables: spinach 300g, onions 3 pcs, tomatoes 3 pcs, cucumber 1 pc, mixed sprouts 200g (moong/chickpea)
+- Fruits: apples 2, oranges 3, mango fresh or frozen 200g
+- Nuts & seeds: almonds 100g, walnuts 100g, pumpkin seeds 100g, almond butter 1 jar, honey small jar
+- Indian pantry: garam masala, cumin, turmeric, coriander powder, chaat masala, amchur, tandoori masala, chana masala powder, hing, black salt, cardamom, cinnamon
+
 
 ### Prep guide tab (diet mode)
 - The cook-once rule: every dinner = next day's lunch, cook double every night
-- Sunday 30-min prep: boil 10-12 eggs, soak oats, pre-portion nuts, thaw mango
-- Every-night 5-min rule: pack leftover immediately after cooking
+- Sunday 30-min prep: boil 10-12 eggs, soak oats for Monday overnight batch, pre-portion nuts into daily bags
+- Every-night 5-min rule: pack leftover immediately after cooking into a labelled container
 - Hydration: jeera water in morning, 2.5-3L water daily
 - Supplements: whey protein (optional), creatine 3-5g/day, Vitamin D3 1500 IU
+- Fat loss note: prioritise protein at every meal (155g/day target) and keep dinner under 700 kcal — this combination preserves muscle while cutting belly fat
 
 ---
 

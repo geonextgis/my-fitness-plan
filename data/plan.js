@@ -27,10 +27,10 @@ const dietPlan = {
       },
       {
         type: 'dinner',
-        name: 'Chicken curry with brown rice',
+        name: 'Egg bhurji with quinoa & salad',
         kcal: 700,
-        items: '300g chicken breast · 80g brown rice · 1 onion · crushed tomatoes · yogurt · garlic-ginger paste · 1 tsp oil · cumin, coriander, turmeric, garam masala',
-        cookDouble: 'Refrigerate half the curry + rice = Tuesday lunch.'
+        items: '5 eggs · 1 onion · 2 tomatoes · green chilli · 1 tsp oil · cumin, turmeric, coriander · 80g quinoa · cucumber + tomato salad',
+        cookDouble: 'Extra bhurji + quinoa packed = Tuesday lunch.'
       }
     ]
   },
@@ -40,9 +40,9 @@ const dietPlan = {
     meals: [
       {
         type: 'breakfast',
-        name: 'Skyr with fruit & chia',
+        name: 'Greek yogurt & berry bowl',
         kcal: 350,
-        items: '200g plain Skyr · 100g mixed berries · 1 tbsp chia seeds · 1 tsp honey · cardamom'
+        items: '200g Greek yogurt · 100g mixed berries · 50g rolled oats · 10g pumpkin seeds · 1 tsp honey · cardamom'
       },
       {
         type: 'snack',
@@ -52,9 +52,9 @@ const dietPlan = {
       },
       {
         type: 'lunch',
-        name: 'Chicken curry & brown rice (Monday leftover)',
+        name: 'Egg bhurji & quinoa (Monday leftover)',
         kcal: 500,
-        items: 'Leftover from Monday dinner. Reheat.'
+        items: 'Leftover from Monday dinner. Reheat bhurji, add fresh coriander and lemon squeeze.'
       },
       {
         type: 'dinner',
@@ -108,9 +108,9 @@ const dietPlan = {
       },
       {
         type: 'snack',
-        name: 'Roasted makhana',
+        name: 'Sprouts salad',
         kcal: 150,
-        items: '30g roasted makhana (fox nuts) — available at Indian grocery store'
+        items: '80g mixed sprouts (moong/chickpea) · 1 small tomato · cucumber · lemon juice · chaat masala · fresh coriander'
       },
       {
         type: 'lunch',
@@ -182,10 +182,10 @@ const dietPlan = {
       },
       {
         type: 'dinner',
-        name: 'Palak paneer (light) with roti',
+        name: 'Chicken curry with brown rice',
         kcal: 690,
-        items: '200g low-fat paneer · 300g spinach · 1 onion · garlic-ginger paste · 1 tsp oil · 1 tsp ghee · garam masala, cumin · 2 whole wheat rotis per person',
-        cookDouble: 'Double palak paneer + 1 extra roti = Sunday lunch.'
+        items: '300g chicken breast · 80g brown rice · 1 onion · crushed tomatoes · yogurt · garlic-ginger paste · 1 tsp oil · cumin, coriander, turmeric, garam masala',
+        cookDouble: 'Refrigerate half the curry + rice = Sunday lunch.'
       }
     ]
   },
@@ -195,21 +195,21 @@ const dietPlan = {
     meals: [
       {
         type: 'breakfast',
-        name: 'Bircher oats with mango',
+        name: 'Masala oat bowl with banana',
         kcal: 370,
-        items: '70g oats · 200ml skimmed milk · 100g Skyr · 1 grated apple · 100g mango · cardamom — prepped Saturday night'
+        items: '70g rolled oats · 200ml skimmed milk · 100g Magerquark · 1 banana · 1 tsp almond butter · cardamom & cinnamon — prepped Saturday night'
       },
       {
         type: 'snack',
-        name: 'Makhana + boiled egg',
+        name: 'Boiled eggs & apple',
         kcal: 145,
-        items: '20g roasted makhana · 1 boiled egg'
+        items: '2 hard-boiled eggs · 1 medium apple · black salt & chaat masala'
       },
       {
         type: 'lunch',
-        name: 'Palak paneer & roti (Saturday leftover)',
+        name: 'Chicken curry & brown rice (Saturday leftover)',
         kcal: 500,
-        items: 'Leftover from Saturday. Reheat. Add fresh onion salad.'
+        items: 'Leftover chicken curry + rice from Saturday. Reheat. Add fresh coriander and lemon.'
       },
       {
         type: 'dinner',

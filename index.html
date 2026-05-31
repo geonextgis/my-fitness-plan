@@ -614,7 +614,7 @@
         <button class="mode-btn"        id="gymModeBtn">Gym</button>
       </div>
       <p class="header-tagline" id="headerTagline">
-        1,850 kcal/day &middot; 155g protein &middot; Cook-once system &middot; Indian-friendly
+        1,850 kcal &middot; Cook once, eat twice &middot; Fat loss + muscle &middot; Indian-friendly
       </p>
       <span class="phase-pill">
         <span class="phase-dot"></span>
@@ -767,7 +767,7 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 
 /* ── Mode ────────────────────────────────────────────────────── */
 const TAGLINES = {
-  diet: '1,850 kcal/day · 155g protein · Cook-once system · Indian-friendly',
+  diet: '1,850 kcal · Cook once, eat twice · Fat loss + muscle · Indian-friendly',
   gym:  'TheosGym Müncheberg · Beginner split · 6 days/week'
 };
 const PHASES = {
@@ -815,13 +815,20 @@ function renderDietDay(key) {
 }
 
 function renderGrocery() {
-  const lines = ['My Weekly Grocery List\n'];
-  let h = `<button class="copy-btn" id="copyBtn">Copy full grocery list to clipboard</button><div class="grocery-grid">`;
-  for (const [cat, items] of Object.entries(grocery)) {
-    lines.push(`${cat}:\n` + items.map(i => `  - ${i}`).join('\n'));
-    h += `<div class="grocery-card"><h3>${cat}</h3><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
-  }
-  return { html: h + '</div>', text: lines.join('\n') };
+  let h = '';
+  const trips = groceryTrips.map((trip, i) => {
+    const lines = [trip.title + '\n'];
+    h += `<p class="section-eyebrow">${trip.title}</p>`;
+    h += `<button class="copy-btn" data-trip="${i}">Copy this trip's list to clipboard</button>`;
+    h += '<div class="grocery-grid">';
+    for (const [cat, items] of Object.entries(trip.categories)) {
+      lines.push(`${cat}:\n` + items.map(it => `  - ${it}`).join('\n'));
+      h += `<div class="grocery-card"><h3>${cat}</h3><ul>${items.map(it => `<li>${it}</li>`).join('')}</ul></div>`;
+    }
+    h += '</div>';
+    return lines.join('\n');
+  });
+  return { html: h, texts: trips };
 }
 
 function renderPrep() {
@@ -830,16 +837,15 @@ function renderPrep() {
       <p>Every dinner is cooked in double portion. Half goes straight into the fridge and becomes the next day's lunch — zero extra effort. One cooking session per day, every day.</p>
     </div>
     <div class="prep-card"><h3>Sunday 30-Minute Prep</h3><ul>
-      <li>Hard-boil 10–12 eggs — store in shell for Mon/Wed/Fri snacks</li>
-      <li>Roast a full batch of makhana with salt and pepper</li>
-      <li>Pre-measure oat jars for Mon and Wed overnight oats</li>
-      <li>Thaw frozen mango in fridge overnight</li>
+      <li>Hard-boil 10–12 eggs — store in shell for the week's snacks</li>
+      <li>Soak oats for Monday's overnight batch</li>
+      <li>Pre-portion nuts into daily bags</li>
       <li>Dice onions, tomatoes, cucumber — airtight boxes in fridge</li>
     </ul></div>
     <div class="prep-card"><h3>Every-Night 5-Minute Rule</h3><ul>
-      <li>Pack tomorrow's lunch box directly from tonight's pot while still warm</li>
+      <li>Pack the leftover immediately after cooking into a labelled container</li>
+      <li>That labelled container is tomorrow's lunch — straight into the fridge</li>
       <li>Set out tomorrow's breakfast ingredients on the counter</li>
-      <li>On overnight-oats nights, layer the jar and refrigerate</li>
     </ul></div>
     <div class="prep-card"><h3>Hydration</h3><ul>
       <li>Target 2.5–3 L of water every day</li>
@@ -851,6 +857,9 @@ function renderPrep() {
       <li><strong>Creatine monohydrate</strong> — 3–5 g/day, any time</li>
       <li><strong>Vitamin D3</strong> — 1,500 IU/day (essential in Germany)</li>
     </ul></div>
+    <div class="prep-card accent"><h3>Fat Loss Note</h3>
+      <p>Prioritise protein at every meal (155 g/day target) and keep dinner under 700 kcal — this combination preserves muscle while cutting belly fat.</p>
+    </div>
   </div>`;
 }
 
@@ -870,15 +879,19 @@ function showDietTab(key) {
   el.style.opacity = '0';
   setTimeout(() => {
     if (key === 'grocery') {
-      const { html, text } = renderGrocery();
+      const { html, texts } = renderGrocery();
       el.innerHTML = html;
-      document.getElementById('copyBtn').addEventListener('click', function () {
-        const cb = () => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy full grocery list to clipboard'; }, 2200); };
-        navigator.clipboard ? navigator.clipboard.writeText(text).then(cb).catch(fallback) : fallback();
-        function fallback() {
-          const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
-          document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb();
-        }
+      el.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const text = texts[+this.dataset.trip];
+          const label = this.textContent;
+          const cb = () => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = label; }, 2200); };
+          navigator.clipboard ? navigator.clipboard.writeText(text).then(cb).catch(fallback) : fallback();
+          function fallback() {
+            const ta = Object.assign(document.createElement('textarea'), { value: text, style: 'position:fixed;opacity:0' });
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb();
+          }
+        });
       });
     } else if (key === 'prep') {
       el.innerHTML = renderPrep();

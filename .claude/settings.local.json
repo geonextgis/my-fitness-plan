@@ -3,7 +3,11 @@
     "allow": [
       "Bash(New-Item -ItemType Directory -Force -Path \"D:\\\\GITHUB\\\\PROJECT\\\\diet-plan\\\\data\")",
       "Bash(Out-Null)",
-      "Bash(Write-Output \"dir created\")"
+      "Bash(Write-Output \"dir created\")",
+      "Bash(node --check data/plan.js)",
+      "Bash(node --check data/grocery.js)",
+      "Bash(node --check data/gym.js)",
+      "PowerShell($node = \\(Get-Command node -ErrorAction SilentlyContinue\\); if \\($node\\) { node --check data/plan.js; node --check data/grocery.js; node --check data/gym.js; \"ALL JS OK\" } else { \"node not available\" })"
     ]
   }
 }
